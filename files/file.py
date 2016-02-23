@@ -42,7 +42,7 @@ description:
 notes:
     - See also M(copy), M(template), M(assemble)
 requirements: [ ]
-author: 
+author:
     - "Ansible Core Team"
     - "Michael DeHaan"
 options:
@@ -279,8 +279,8 @@ def main():
             # file is not absent and any other state is a conflict
             module.fail_json(path=path, msg='file (%s) is %s, cannot continue' % (path, prev_state))
 
-        changed = module.set_fs_attributes_if_different(file_args, changed, diff)
-        module.exit_json(path=path, changed=changed, diff=diff)
+        changed = module.set_fs_attributes_if_different(file_args, changed)
+        module.exit_json(path=path, changed=changed=diff)
 
     elif state == 'directory':
         if follow and prev_state == 'link':
@@ -313,7 +313,7 @@ def main():
                                 raise
                         tmp_file_args = file_args.copy()
                         tmp_file_args['path']=curpath
-                        changed = module.set_fs_attributes_if_different(tmp_file_args, changed, diff)
+                        changed = module.set_fs_attributes_if_different(tmp_file_args, changed)
             except Exception, e:
                 module.fail_json(path=path, msg='There was an issue creating %s as requested: %s' % (curpath, str(e)))
 
@@ -321,12 +321,12 @@ def main():
         elif prev_state != 'directory':
             module.fail_json(path=path, msg='%s already exists as a %s' % (path, prev_state))
 
-        changed = module.set_fs_attributes_if_different(file_args, changed, diff)
+        changed = module.set_fs_attributes_if_different(file_args, changed)
 
         if recurse:
             changed |= recursive_set_attributes(module, file_args['path'], follow, file_args)
 
-        module.exit_json(path=path, changed=changed, diff=diff)
+        module.exit_json(path=path, changed=changed=diff)
 
     elif state in ['link','hard']:
 
@@ -395,10 +395,10 @@ def main():
                     module.fail_json(path=path, msg='Error while linking: %s' % str(e))
 
         if module.check_mode and not os.path.exists(path):
-            module.exit_json(dest=path, src=src, changed=changed, diff=diff)
+            module.exit_json(dest=path, src=src, changed=changed=diff)
 
-        changed = module.set_fs_attributes_if_different(file_args, changed, diff)
-        module.exit_json(dest=path, src=src, changed=changed, diff=diff)
+        changed = module.set_fs_attributes_if_different(file_args, changed)
+        module.exit_json(dest=path, src=src, changed=changed=diff)
 
     elif state == 'touch':
         if not module.check_mode:
@@ -416,7 +416,7 @@ def main():
             else:
                 module.fail_json(msg='Cannot touch other than files, directories, and hardlinks (%s is %s)' % (path, prev_state))
             try:
-                module.set_fs_attributes_if_different(file_args, True, diff)
+                module.set_fs_attributes_if_different(file_args, True)
             except SystemExit, e:
                 if e.code:
                     # We take this to mean that fail_json() was called from
