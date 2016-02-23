@@ -280,7 +280,7 @@ def main():
             module.fail_json(path=path, msg='file (%s) is %s, cannot continue' % (path, prev_state))
 
         changed = module.set_fs_attributes_if_different(file_args, changed)
-        module.exit_json(path=path, changed=changed=diff)
+        module.exit_json(path=path, changed=diff)
 
     elif state == 'directory':
         if follow and prev_state == 'link':
@@ -326,7 +326,7 @@ def main():
         if recurse:
             changed |= recursive_set_attributes(module, file_args['path'], follow, file_args)
 
-        module.exit_json(path=path, changed=changed=diff)
+        module.exit_json(path=path, changed=diff)
 
     elif state in ['link','hard']:
 
@@ -395,10 +395,10 @@ def main():
                     module.fail_json(path=path, msg='Error while linking: %s' % str(e))
 
         if module.check_mode and not os.path.exists(path):
-            module.exit_json(dest=path, src=src, changed=changed=diff)
+            module.exit_json(dest=path, src=src, changed=diff)
 
         changed = module.set_fs_attributes_if_different(file_args, changed)
-        module.exit_json(dest=path, src=src, changed=changed=diff)
+        module.exit_json(dest=path, src=src, changed=diff)
 
     elif state == 'touch':
         if not module.check_mode:
